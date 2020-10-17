@@ -15,7 +15,6 @@ from operator import itemgetter, attrgetter
 # from numba import jit
 
 quick_find_msg = 'time seed=int(start_time), C(i): 0 1 0, m=2, auto classify, msg changed on Apr. 1'
-# RUN LOG: time seed=0 #1114: seed=1(之前大部分实验都是seed=1);
 # Attention! phase2_input.pop(1)#保留初始种群中lambda_c最差的,亦即Robustness通常最好的一个
 BA_M = 2
 NETWORK_SIZE = 500
@@ -45,11 +44,10 @@ def cal_fit1(sfn: SFN):  # maximize
 def cal_fit2(sfn: SFN):
     return sfn.cal_R_2()  # maximize
 
-# fit: list(list() * M) for M object, ith fit for fitness of ith object
-# return [set, set, ...] for index of first front, second front...
-
 
 def fast_ndmn_sort(fit):  # write for Maximum question
+    # fit: list(list() * M) for M object, ith fit for fitness of ith object
+    # return [set, set, ...] for index of first front, second front...
     N = len(fit[0])  # population size
     S = [set() for i in range(N)]
     n = [0 for i in range(N)]
@@ -77,8 +75,8 @@ def fast_ndmn_sort(fit):  # write for Maximum question
     return front[0:-1]  # skip the last empty set()
 
 
-# fit: list(list() * M) for M object, ith fit for fitness of ith object
 def cal_crowd_distance(front, fit):
+    # fit: list(list() * M) for M object, ith fit for fitness of ith object
     # sort function for function cal_crowd_distance (ascending)
     def sort_crowd_distance(front, sub_fit):
         sorted_front = [(i, sub_fit[i]) for i in front]
@@ -99,17 +97,17 @@ def cal_crowd_distance(front, fit):
     return d
 
 
-# 计算超体积HV #非支配前沿解的fit. fit_1: lambda_c 小到大 fit_2:robustness 大到小
 def cal_hyper_volume(fit_1, fit_2):
+    # 计算超体积HV #非支配前沿解的fit. fit_1: lambda_c 小到大 fit_2:robustness 大到小
     HV = fit_1[0]*fit_2[0]
     for i in range(1, len(fit_1)):
         HV += (fit_1[i]-fit_1[i-1]) * fit_2[i]
     return HV
 
 
-# ALPHA_R: redundancy alpha; ALPHA_D: degree alpha; RATIO=1 onlly depend on degree
-# Multiobjective Evolution Algorithm
 class MOEA_SFCN:
+    # ALPHA_R: redundancy alpha; ALPHA_D: degree alpha; RATIO=1 onlly depend on degree
+    # Multiobjective Evolution Algorithm
     def __init__(self, G: nx.Graph, HOST_SIZE: int,
                  ALPHA_R, ALPHA_D, RATIO, POP_SIZE, PHASE2_MAINTAIN_MAX,
                  in_PHASE2_MUTATION_METHOD, in_PHASE2_MUTATION_PERCENT):
@@ -148,9 +146,7 @@ class MOEA_SFCN:
         self.in_PHASE2_MUTATION_METHOD = in_PHASE2_MUTATION_METHOD
         self.in_PHASE2_MUTATION_PERCENT = in_PHASE2_MUTATION_PERCENT
 
-    # select the individual to POP_SIZE # e.g. len>=40 to len=20
-
-    def select_half(self):
+    def select_half(self):  # select the individual to POP_SIZE # e.g. len>=40 to len=20
         fit_l = [sfn.lambda_c for sfn in self.pop]  # list(sfn.lambda_c,...)
         # fit_l = [v/sum(fit_l) for v in fit_l]
         idx_l = list()
@@ -382,11 +378,10 @@ class MOEA_SFCN:
             print("[ERROR] mutation TYPE ERROR")
         return None
 
-# 存储至文件
-# 文件名：NETWORK_SIZE _ HOST_SIZE _ pop+POP_SIZE _ PHASE2_MUTATION_METHOD PHASE1_NFFE _ PHASE2_NFFE (percent) _ ALPHA_+ALPHA_R
-
 
 def log_to_file(time_id, G):
+    # 存储至文件
+    # 文件名：NETWORK_SIZE _ HOST_SIZE _ pop+POP_SIZE _ PHASE2_MUTATION_METHOD PHASE1_NFFE _ PHASE2_NFFE (percent) _ ALPHA_+ALPHA_R
     global saveStdOut
     global file_log
     saveStdOut = sys.stdout

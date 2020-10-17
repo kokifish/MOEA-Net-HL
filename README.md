@@ -34,8 +34,9 @@ python CN_Run_Real.py
 # Data Description
 
 - `/data/USAirLines.txt`: topology of US air lines
-- `/data/as19981229.txt`: topology of AS-level network
+- `/data/as19981229.txt`: topology of AS-level network (AS for Autonomous Systems)
 
 # Cite
 
-- TBD
+- US Air lines: http://vlado.fmf.uni-lj.si/pub/networks/data/
+- Autonomous Systems : graphs of the internet: http://snap.stanford.edu/data/

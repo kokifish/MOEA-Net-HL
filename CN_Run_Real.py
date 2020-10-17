@@ -16,7 +16,7 @@ import CN_Run_MOEA_SFCN as moea
 quick_find_msg = 'real network, C(i) is 0 1 0, this may be NSGA-2!!!'
 
 
-DATASET = "USAir" # "AS" , "USAir"
+DATASET = "USAir"  # "AS" , "USAir"
 # RUN LOG:
 HOST_SIZE_FRAC = 0.15
 P_MUTATION = 0.1
@@ -73,11 +73,11 @@ def USAirReadEdgenNodeList(path):
     return EdgeList, sorted(list(NodeList))
 
 
-
 # return a graph #返回读取到的图
 def pre_process_USAirLines(path):
     # EdgeList.values: np.array
-    EdgeList, NodeList = USAirReadEdgenNodeList(path) # [[from, to], [from, to],...]
+    EdgeList, NodeList = USAirReadEdgenNodeList(
+        path)  # [[from, to], [from, to],...]
     # print("[USAir] NodeList", type(NodeList), len(NodeList), NodeList)
     # print("[USAir] EdgeList", type(EdgeList), len(EdgeList), EdgeList[:10])
     EdgeList = [[NodeList.index(l[0]), NodeList.index(l[1])]
@@ -116,9 +116,10 @@ def log_to_file(time_id, G):
     else:
         print("---  folder ", path, " exits  ---\n")
 
-    file_log = open((os.path.join(path, str(time_id)+".log")), 'w')  # 绝对路径 + time id为文件名
+    file_log = open((os.path.join(path, str(time_id)+".log")),
+                    'w')  # 绝对路径 + time id为文件名
     sys.stdout = file_log
-    file_G = open((os.path.join(path,str(time_id)+"G.data")), 'wb+')
+    file_G = open((os.path.join(path, str(time_id)+"G.data")), 'wb+')
     pickle.dump(G, file_G)
     file_G.close()
 
@@ -160,9 +161,9 @@ def main():
     ### definition of MOEA ########################################################
     MOEA = moea.MOEA_SFCN(G, HOST_SIZE=HOST_SIZE,
                           ALPHA_R=ALPHA_R, ALPHA_D=1, RATIO=1, POP_SIZE=POP_SIZE, PHASE2_MAINTAIN_MAX=PHASE2_MAINTAIN_MAX, in_PHASE2_MUTATION_METHOD=PHASE2_MUTATION_METHOD, in_PHASE2_MUTATION_PERCENT=PHASE2_MUTATION_PERCENT)
-    ### PHASE1 process single object EA ###############################################
+    ### PHASE1 process single object EA #############################################
     MOEA.single_object_process(PHASE1_NFFE)
-    ### PHASE2 process NSGA-2: PHASE2_NFFE: cal counts of lambda_c & robustness##########
+    ### PHASE2 process NSGA-2: PHASE2_NFFE: cal counts of lambda_c & robustness######
     front, f1_fit, f2_fit = MOEA.NSGA_2_process(PHASE2_NFFE)
     ### Algorithm END MOEA ########################################################
 
@@ -196,15 +197,15 @@ def main():
     print("HV:", moea.cal_hyper_volume(f1_fit, f2_fit))
     ### property ####################################################################
     moea.print_property(ndmn_front)
-    #################################################################################
 
     ### cancel log to file ######################################################
     cancel_log()
-    print('[End] Total time: ', (time.time() - start_time)/3600, 'hours, process time', (time.process_time() - start_process_t)/3600, '#MOEA_SFCN', "HV:", moea.cal_hyper_volume(f1_fit, f2_fit), "\n\n")
+    print('[End] Total time: ', (time.time() - start_time)/3600, 'hours, process time', (time.process_time() -
+                                                                                         start_process_t)/3600, '#MOEA_SFCN', "HV:", moea.cal_hyper_volume(f1_fit, f2_fit), "\n\n")
 
 
 if __name__ == "__main__":
     main_loop_time = 1
     print("main loop time = ", main_loop_time)
     for i in range(main_loop_time):
-        main()#python CN_Run_Real.py
+        main()  # python CN_Run_Real.py
